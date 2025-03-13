@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Maxwell Mischief",
+  "version": "1.0",
+  "description": "A simple Chrome extension with buttons that when clicked upon, send the user to outer space millions of lightyears away.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "128": "icon128.png"
+    }
+  },
+  "permissions": [ "scripting", "activeTab" ],
+  "host_permissions": [ "<all_urls>" ],
+  "web_accessible_resources": [
+    {
+      "resources": [ "inject/injected.html" ],
+      "matches": [ "<all_urls>" ]
+    },
+    {
+      "resources": [ "inject/injected.js" ],
+      "matches": [ "<all_urls>" ]
+    }
+  ]
+}
