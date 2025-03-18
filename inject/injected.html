@@ -1,18 +1,45 @@
-<div class="button-container" style="color: white;">
-    <span>Show/Hide Cats:</span>
-    <button onclick="hideCats()">Hide</button>
-    <button onclick="showCats()">Show</button>
-</div>
-<div class="button-container" style="color: white;">
-    <span>Teleport To coin:</span>
-    <button onclick="teleportToCoin()">Woop</button>
-</div>
-<div class="button-container" style="color: white;">
-    <span>Activate Super Speed:</span>
-    <button onclick="superSpeedUp()">More zoomies</button>
-    <button onclick="superSpeedDown()">Less zoomies</button>
-</div>
-<div class="button-container" style="color: white;">
-    <span>I am become rat:</span>
-    <button onclick="becomeRat()">Poof</button>
+<style>
+    button:hover {
+        color: green;
+    }
+</style>
+<div style="flex-direction: row;">
+    <div class="button-container" style="color: white">
+        <span>Cheshire Cats:</span>
+        <button onclick="toggleCatVis()">Toggle</button>
+    </div>
+
+    <div class="button-container" style="color: white">
+        <span>Teleport To coin:</span>
+        <button onclick="teleportToCoin()">Woop</button>
+    </div>
+
+    <div class="button-container" style="color: white">
+        <span id="zoomiesLabel">Zoomies ():</span>
+        <button onclick="superSpeedUp()">[ + ]</button>
+        <button onclick="superSpeedDown()">[ - ]</button>
+    </div>
+
+    <div class="button-container" style="color: white">
+        <span>Fly:</span>
+        <button onclick="flyUp()">[ Q ]</button>
+        <button onclick="flyDown()">[ E ]</button>
+    </div>
+
+    <div class="button-container" style="color: white">
+        <span>I am become rat:</span>
+        <button onclick="becomeRat()">Poof</button>
+    </div>
+
+    <div class="button-container" style="color: white">
+        <span>New Cats = Rat:</span>
+        <button onclick="newSpawnsRat()">Hmm</button>
+    </div>
+
+    <div class="button-container" style="color: white">
+        <span>Chungus Mode:</span>
+        <button onclick="chungusMode()">===</button>
+    </div>
+
+
 </div>
