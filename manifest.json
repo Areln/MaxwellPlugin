@@ -13,15 +13,11 @@
   "host_permissions": [ "https://maxwellcat.world/*" ],
   "web_accessible_resources": [
     {
-      "resources": [ "scripts/*.js" ],
+      "resources": [ "inject/injected.html" ],
       "matches": [ "https://maxwellcat.world/*" ]
     },
     {
-      "resources": [ "ui/injected.html" ],
-      "matches": [ "https://maxwellcat.world/*" ]
-    },
-    {
-      "resources": [ "injected.js" ],
+      "resources": [ "inject/injected.js" ],
       "matches": [ "https://maxwellcat.world/*" ]
     }
   ]

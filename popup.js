@@ -15,7 +15,7 @@ function injectUI() {
             target: { tabId: tabs[0].id },
             function: () => {
                 (async function () {
-                    const response = await fetch(chrome.runtime.getURL("ui/injected.html"));
+                    const response = await fetch(chrome.runtime.getURL("inject/injected.html"));
                     const html = await response.text();
 
                     let container = document.getElementById("zoomControls");
@@ -25,7 +25,7 @@ function injectUI() {
                         container.append(controls)
 
                         const script = document.createElement("script");
-                        script.src = chrome.runtime.getURL("injected.js");
+                        script.src = chrome.runtime.getURL("inject/injected.js");
                         document.documentElement.appendChild(script);
                     }
                 })();
