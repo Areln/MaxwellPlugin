@@ -40,32 +40,28 @@ function RotateTowards(cat1, cat2) {
     cat1.object.quaternion.copy(targetQuaternion);
 }
 
-function RotateTowards2(cat1, cat2) {
-    // Get world positions
-    const pos1 = new THREE.Vector3();
-    cat1.getWorldPosition(pos1);
-
-    const pos2 = new THREE.Vector3();
-    cat2.getWorldPosition(pos2);
-
-    // Calculate the direction vector
-    const direction = new THREE.Vector3().subVectors(pos2, pos1).normalize();
-
-    // Create a look-at quaternion
-    const up = new THREE.Vector3(0, 1, 0);  // Y-up axis
-    const targetQuaternion = new THREE.Quaternion().setFromUnitVectors(up, direction);
-
-    // Apply the quaternion to the cat
-    cat1.object.quaternion.copy(targetQuaternion);
-}
-
 function teleportToCoin() {
     //worldConfig.myCat.setPosition(
     //    worldConfig.rat.getPosition().x,
     //    worldConfig.rat.getPosition().y,
     //    worldConfig.rat.getPosition().z
     //);
+
     RotateTowards(myCat, rat);
+
+    const intervalId = setInterval(function () {
+        if (getDistance(myCat.getWorldPosition(), rat.getWorldPosition()) > 1) {
+            myCat.translateZ(1);
+        } else {
+            clearInterval(intervalId);
+        }
+    }, 100);
+
+    // Stop after 20 seconds
+    setTimeout(() => {
+        clearInterval(intervalId);
+        console.log("Stopped function execution.");
+    }, 20000);
 }
 
 function becomeRat() {
@@ -140,3 +136,12 @@ function setCatModelScale(catModelChild, x, y, z) {
 function newSpawnsRat() {
     worldConfig.catObject = worldConfig.ratObject;
 }
+
+function getDistance(posA, posB) {
+    return Math.sqrt(
+        (posB.x - posA.x) ** 2 +
+        (posB.y - posA.y) ** 2 +
+        (posB.z - posA.z) ** 2
+    );
+}
+
