@@ -52,6 +52,7 @@ function disableRoboCat() {
     roboLabelElement.innerHTML = 'ROBOCAT (O):';
     clearInterval(roboCatInterval);
     clearInterval(translateInterval);
+    clearInterval(idleRotateInterval);
 }
 
 function RotateTowards(cat1, cat2) {
