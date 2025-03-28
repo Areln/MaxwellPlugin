@@ -87,7 +87,6 @@ function moveTowardsCoin() {
     // Stop after 20 seconds
     setTimeout(() => {
         clearInterval(intervalId);
-        console.log("Stopped function execution.");
     }, 20000);
 }
 
