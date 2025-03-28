@@ -86,7 +86,7 @@ function moveTowardsCoin() {
 
     // Stop after 20 seconds
     setTimeout(() => {
-        clearInterval(intervalId);
+        clearInterval(translateInterval);
     }, 20000);
 }
 
