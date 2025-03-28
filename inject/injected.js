@@ -6,9 +6,10 @@ var roboLabelElement = document.getElementById("roboLabel");
 var chungusModeToggle = true;
 var defaultCatScale = worldConfig.myCat.catModel.children[0].scale;
 
+var idleRotateInterval;
 var translateInterval;
 var roboCatInterval;
-var ratPos;
+var ratPos = { x: 0, y: 0, z: 0 };
 
 // Remove top background for increased visibility
 var topbar = document.getElementById("topbar");
@@ -33,12 +34,15 @@ function enableRoboCat() {
     roboLabelElement.innerHTML = 'ROBOCAT (X):';
     // start rat pos check interval
     roboCatInterval = setInterval(function () {
-        var newPos = rat.getPosition();
-        if (ratPos == undefined || ratPos != newPos) {
+        var newPos = { ...rat.getPosition() };
+
+        if (ratPos.x !== newPos.x && ratPos.z !== newPos.z) {
+            console.log('new position detected: (' + ratPos.x + ',' + ratPos.y + ',' + ratPos.z + ') // (' + newPos.x + ',' + newPos.y + ',' + newPos.z + ')');
             if (translateInterval != undefined)
             {
                 clearInterval(translateInterval);
             }
+            ratPos = newPos;
             moveTowardsCoin();
         }
     }, 8000);
@@ -75,15 +79,27 @@ function moveTowardsCoin() {
     //    worldConfig.rat.getPosition().y,
     //    worldConfig.rat.getPosition().z
     //);
-
+    if (idleRotateInterval != undefined) {
+        clearInterval(idleRotateInterval);
+    }
     RotateTowards(myCat, rat);
     translateInterval = setInterval(function () {
+
         if (getDistance(myCat.getWorldPosition(), rat.getWorldPosition()) > 1) {
             myCat.translateZ(1);
         } else {
+            console.log('Reached Target');
             clearInterval(translateInterval);
+            idleRotate();
         }
     }, 100);
+}
+
+function idleRotate() {
+    idleRotateInterval = setInterval(function () {
+        worldConfig.myCat.rotateY(worldConfig.catRotationSpeed);
+    }, 1000/100);
+    
 }
 
 function becomeRat() {
