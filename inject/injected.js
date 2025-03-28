@@ -80,7 +80,7 @@ function moveTowardsCoin() {
         if (getDistance(myCat.getWorldPosition(), rat.getWorldPosition()) > 1) {
             myCat.translateZ(1);
         } else {
-            clearInterval(intervalId);
+            clearInterval(translateInterval);
         }
     }, 100);
 
