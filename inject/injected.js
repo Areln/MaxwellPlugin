@@ -71,10 +71,6 @@ function moveTowardsCoin() {
     //    worldConfig.rat.getPosition().z
     //);
 
-    if (translateInterval != undefined) {
-        clearInterval(translateInterval);
-    }
-
     RotateTowards(myCat, rat);
     translateInterval = setInterval(function () {
         if (getDistance(myCat.getWorldPosition(), rat.getWorldPosition()) > 1) {
