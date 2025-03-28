@@ -2,7 +2,7 @@
 var currentSpeed = 0.05;
 var showHideToggle = true;
 var zoomiesLabelElement = document.getElementById("zoomiesLabel");
-var roboLabelElement = document.getElementById("roboLabel"); 
+var roboLabelElement = document.getElementById("roboLabel");
 var chungusModeToggle = true;
 var defaultCatScale = worldConfig.myCat.catModel.children[0].scale;
 
@@ -35,6 +35,10 @@ function enableRoboCat() {
     roboCatInterval = setInterval(function () {
         var newPos = rat.getPosition();
         if (ratPos == undefined || ratPos != newPos) {
+            if (translateInterval != undefined)
+            {
+                clearInterval(translateInterval);
+            }
             moveTowardsCoin();
         }
     }, 8000);
@@ -43,6 +47,7 @@ function enableRoboCat() {
 function disableRoboCat() {
     roboLabelElement.innerHTML = 'ROBOCAT (O):';
     clearInterval(roboCatInterval);
+    clearInterval(translateInterval);
 }
 
 function RotateTowards(cat1, cat2) {
@@ -79,11 +84,6 @@ function moveTowardsCoin() {
             clearInterval(translateInterval);
         }
     }, 100);
-
-    // Stop after 20 seconds
-    setTimeout(() => {
-        clearInterval(translateInterval);
-    }, 20000);
 }
 
 function becomeRat() {
