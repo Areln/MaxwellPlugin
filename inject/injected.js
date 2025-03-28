@@ -1,15 +1,18 @@
 
 var currentSpeed = 0.05;
 var showHideToggle = true;
-
 var zoomiesLabelElement = document.getElementById("zoomiesLabel");
-
-var topbar = document.getElementById("topbar");
-topbar.style = "background: rgb(0 0 0 / 0%);"
-
-
+var roboLabelElement = document.getElementById("roboLabel"); 
 var chungusModeToggle = true;
 var defaultCatScale = worldConfig.myCat.catModel.children[0].scale;
+
+var translateInterval;
+var roboCatInterval;
+var ratPos;
+
+// Remove top background for increased visibility
+var topbar = document.getElementById("topbar");
+topbar.style = "background: rgb(0 0 0 / 0%);"
 
 document.addEventListener("keydown", function (event) {
     if (event.code === "Space") {
@@ -26,51 +29,21 @@ document.addEventListener("keydown", function (event) {
     }
 });
 
+function enableRoboCat() {
+    roboLabelElement.innerHTML = 'ROBOCAT (X):';
+    // start rat pos check interval
+    roboCatInterval = setInterval(function () {
+        var newPos = rat.getPosition();
+        if (ratPos == undefined || ratPos != newPos) {
+            moveTowardsCoin();
+        }
+    }, 8000);
+}
 
-const websocketEventListener2 = (event) => {
-    //console.log(event);
-
-    // Wait until we have our own cat before creating anyone else's
-    if (worldConfig.myCat === undefined) {
-        return;
-    }
-
-    // If the event payload is an ArrayBuffer then use MessagePack, else the
-    // server is still using json so fallback
-    var eventPayload;
-    if (event.data instanceof ArrayBuffer) {
-        eventPayload = MessagePack.decode(event.data);
-    } else {
-        eventPayload = JSON.parse(event.data);
-    }
-    if (!eventPayload) {
-        console.log("Malformed event data:", event.data);
-        return;
-    }
-    console.log(eventPayload.type);
-    switch (eventPayload.type) {
-        case "target":
-            console.log('new rat?');
-        //// Update the targetToken we'll give to the server if we get close enough
-        //worldConfig.targetToken = eventPayload.token;
-
-        //// Make the rat visible
-        //worldConfig.rat.object.visible = true;
-
-        //// There will be a new rat in 30s
-        //worldConfig.timeUntilNextTarget = 30;
-
-        //// Update the rat's position
-        //worldConfig.rat.setPosition(
-        //    eventPayload.worldPosition[0],
-        //    eventPayload.worldPosition[1],
-        //    eventPayload.worldPosition[2]
-        //);
-
-        //// Reset the rat's name
-        //worldConfig.rat.setName("Rat (30s)");
-    }
-};
+function disableRoboCat() {
+    roboLabelElement.innerHTML = 'ROBOCAT (O):';
+    clearInterval(roboCatInterval);
+}
 
 function RotateTowards(cat1, cat2) {
     // Get world positions
@@ -91,15 +64,19 @@ function RotateTowards(cat1, cat2) {
     cat1.object.quaternion.copy(targetQuaternion);
 }
 
-function teleportToCoin() {
+function moveTowardsCoin() {
     //worldConfig.myCat.setPosition(
     //    worldConfig.rat.getPosition().x,
     //    worldConfig.rat.getPosition().y,
     //    worldConfig.rat.getPosition().z
     //);
 
+    if (translateInterval != undefined) {
+        clearInterval(translateInterval);
+    }
+
     RotateTowards(myCat, rat);
-    const intervalId = setInterval(function () {
+    translateInterval = setInterval(function () {
         if (getDistance(myCat.getWorldPosition(), rat.getWorldPosition()) > 1) {
             myCat.translateZ(1);
         } else {
@@ -206,8 +183,6 @@ function connectAnother() {
     websocket.addEventListener("message", websocketEventListener2);
 }
 
-
-
 function newCat() {
     worldConfig.myCat = new Cat(
         "",
@@ -220,9 +195,6 @@ function newCat() {
     );
     worldConfig.myCat.addToScene(myCat.object.parent);
 }
-
-
-
 
 class Cat {
     constructor(name, position, rotation, catObject) {
@@ -347,3 +319,47 @@ class Cat {
     }
 }
 
+const websocketEventListener2 = (event) => {
+    //console.log(event);
+
+    // Wait until we have our own cat before creating anyone else's
+    if (worldConfig.myCat === undefined) {
+        return;
+    }
+
+    // If the event payload is an ArrayBuffer then use MessagePack, else the
+    // server is still using json so fallback
+    var eventPayload;
+    if (event.data instanceof ArrayBuffer) {
+        eventPayload = MessagePack.decode(event.data);
+    } else {
+        eventPayload = JSON.parse(event.data);
+    }
+    if (!eventPayload) {
+        console.log("Malformed event data:", event.data);
+        return;
+    }
+    console.log(eventPayload.type);
+    switch (eventPayload.type) {
+        case "target":
+            console.log('new rat?');
+        //// Update the targetToken we'll give to the server if we get close enough
+        //worldConfig.targetToken = eventPayload.token;
+
+        //// Make the rat visible
+        //worldConfig.rat.object.visible = true;
+
+        //// There will be a new rat in 30s
+        //worldConfig.timeUntilNextTarget = 30;
+
+        //// Update the rat's position
+        //worldConfig.rat.setPosition(
+        //    eventPayload.worldPosition[0],
+        //    eventPayload.worldPosition[1],
+        //    eventPayload.worldPosition[2]
+        //);
+
+        //// Reset the rat's name
+        //worldConfig.rat.setName("Rat (30s)");
+    }
+};
