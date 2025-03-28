@@ -99,7 +99,6 @@ function idleRotate() {
     idleRotateInterval = setInterval(function () {
         worldConfig.myCat.rotateY(worldConfig.catRotationSpeed);
     }, 1000/100);
-    
 }
 
 function becomeRat() {
@@ -194,17 +193,64 @@ function connectAnother() {
     websocket.addEventListener("message", websocketEventListener2);
 }
 
-function newCat() {
-    worldConfig.myCat = new Cat(
-        "",
-        new THREE.Vector3(
-            Math.random() * 25 - 12.5, 0,
-            Math.random() * 25 - 12.5
-        ),
-        new THREE.Vector4(),
-        worldConfig.catObject
+function loadRat(loader, position) {
+    loader.load(
+        // "dingus the cat" (https://skfb.ly/oAtMJ) by bean(alwayshasbean) is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+        "assets/models/rat.json",
+        function (object) {
+            worldConfig.myCat.object.add(object)
+            object.position.x = position.x;
+            object.position.y = position.y;
+            object.position.z = position.z;
+        }
     );
-    worldConfig.myCat.addToScene(myCat.object.parent);
+}
+
+function newCat() {
+
+    const loader = new THREE.ObjectLoader();
+    loader.load(
+        "assets/models/arrow.json",
+        function (object) {
+            myCat.object.parent.add(object);
+            object.visible = true;
+            //object.visible = false
+            object.children[0].material.color = { r: 0.8, g: 0.2, b: 0.8 };
+            worldConfig.myCat.object.add(object);
+            setInterval(() => {
+                if (worldConfig.rat.object.position.y >= 0 && worldConfig.rat.object.visible && worldConfig.rat.labelSprite.text.startsWith("Rat (")) {
+                    object.visible = true;
+                    //object.lookAt(worldConfig.myCat.object.position)
+                    object.rotateY(1);
+                }
+            }, 1000 / 30)
+        }
+    ) 
+
+    // Imprison the rat in a magic cylinder
+    //loader.load(
+    //    "assets/models/ratprison.json",
+    //    function (object) {
+    //        worldConfig.myCat.object.add(object)
+    //        object.position.z = 2;
+    //    }
+    //)
+
+    loadRat(loader, { x: 1, y: 1, z: 0 });
+    loadRat(loader, { x: 1, y: 1, z: 1 });
+    loadRat(loader, { x: 0, y: 1, z: 1 });
+    loadRat(loader, { x: 0, y: 1, z: 0 });
+
+    //worldConfig.myCat = new Cat(
+    //    "",
+    //    new THREE.Vector3(
+    //        Math.random() * 25 - 12.5, 0,
+    //        Math.random() * 25 - 12.5
+    //    ),
+    //    new THREE.Vector4(),
+    //    worldConfig.catObject
+    //);
+    //worldConfig.myCat.addToScene(myCat.object.parent);
 }
 
 class Cat {
