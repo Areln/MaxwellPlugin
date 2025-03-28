@@ -37,7 +37,7 @@ function enableRoboCat() {
         var newPos = { ...rat.getPosition() };
 
         if (ratPos.x !== newPos.x && ratPos.z !== newPos.z) {
-            console.log('new position detected: (' + ratPos.x + ',' + ratPos.y + ',' + ratPos.z + ') // (' + newPos.x + ',' + newPos.y + ',' + newPos.z + ')');
+            //console.log('new position detected: (' + ratPos.x + ',' + ratPos.y + ',' + ratPos.z + ') // (' + newPos.x + ',' + newPos.y + ',' + newPos.z + ')');
             if (translateInterval != undefined)
             {
                 clearInterval(translateInterval);
@@ -88,7 +88,6 @@ function moveTowardsCoin() {
         if (getDistance(myCat.getWorldPosition(), rat.getWorldPosition()) > 1) {
             myCat.translateZ(1);
         } else {
-            console.log('Reached Target');
             clearInterval(translateInterval);
             idleRotate();
         }
