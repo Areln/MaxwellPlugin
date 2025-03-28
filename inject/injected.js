@@ -87,7 +87,7 @@ function moveTowardsCoin() {
     translateInterval = setInterval(function () {
 
         if (getDistance(myCat.getWorldPosition(), rat.getWorldPosition()) > 1) {
-            myCat.translateZ(1);
+            myCat.translateZ(worldConfig.maxCatVelocity + 0.05);
         } else {
             clearInterval(translateInterval);
             idleRotate();
