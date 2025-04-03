@@ -9,6 +9,14 @@
       "128": "icon128.png"
     }
   },
+  "content_scripts":
+    [
+      {
+        "run_at": "document_start",
+        "matches":["https://maxwellcat.world/*"],
+        "js": ["autoinject.js"]
+      }
+    ],
   "permissions": [ "scripting", "activeTab" ],
   "host_permissions": [ "https://maxwellcat.world/*" ],
   "web_accessible_resources": [
