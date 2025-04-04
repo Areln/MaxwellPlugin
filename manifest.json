@@ -27,6 +27,10 @@
     {
       "resources": [ "inject/injected.js" ],
       "matches": [ "https://maxwellcat.world/*" ]
+    },
+    {
+      "resources": [ "oiia.glb" ],
+      "matches": [ "https://maxwellcat.world/*" ]
     }
   ]
 }
