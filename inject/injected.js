@@ -1,3 +1,5 @@
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.114.0/build/three.module.js';
+import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.114.0/examples/jsm/loaders/GLTFLoader.js';
 
 var currentSpeed = 0.05;
 var showHideToggle = true;
@@ -30,6 +32,7 @@ document.addEventListener("keydown", function (event) {
     }
 });
 
+window.enableRoboCat = enableRoboCat;
 function enableRoboCat() {
     roboLabelElement.innerHTML = 'ROBOCAT (X):';
     // start rat pos check interval
@@ -48,6 +51,7 @@ function enableRoboCat() {
     }, 8000);
 }
 
+window.disableRoboCat = disableRoboCat;
 function disableRoboCat() {
     roboLabelElement.innerHTML = 'ROBOCAT (O):';
     clearInterval(roboCatInterval);
@@ -55,6 +59,7 @@ function disableRoboCat() {
     clearInterval(idleRotateInterval);
 }
 
+window.RotateTowards = RotateTowards;
 function RotateTowards(cat1, cat2) {
     // Get world positions
     const pos1 = new THREE.Vector3();
@@ -74,6 +79,7 @@ function RotateTowards(cat1, cat2) {
     cat1.object.quaternion.copy(targetQuaternion);
 }
 
+window.moveTowardsCoin = moveTowardsCoin;
 function moveTowardsCoin() {
     //worldConfig.myCat.setPosition(
     //    worldConfig.rat.getPosition().x,
@@ -95,21 +101,25 @@ function moveTowardsCoin() {
     }, 1000/100);
 }
 
+window.idleRotate = idleRotate;
 function idleRotate() {
     idleRotateInterval = setInterval(function () {
         worldConfig.myCat.rotateY(worldConfig.catRotationSpeed);
     }, 1000/100);
 }
 
+window.becomeRat = becomeRat;
 function becomeRat() {
     worldConfig.myCat = worldConfig.rat;
 }
 
+window.toggleCatVis = toggleCatVis;
 function toggleCatVis() {
     showHideToggle = !showHideToggle;
     worldConfig.otherCats.forEach((x) => (x.catModel.visible = showHideToggle));
 }
 
+window.superSpeedDown = superSpeedDown;
 function superSpeedDown() {
     currentSpeed = currentSpeed - 0.05;
     zoomiesLabelElement.innerHTML = "Zoomies (" + currentSpeed + "):";
@@ -118,6 +128,7 @@ function superSpeedDown() {
     //worldConfig.catRotationSpeed = worldConfig.catRotationSpeed - 0.05;
 }
 
+window.superSpeedUp = superSpeedUp;
 function superSpeedUp() {
     currentSpeed = currentSpeed + 0.05;
     zoomiesLabelElement.innerHTML = "Zoomies (" + currentSpeed + "):";
@@ -126,6 +137,7 @@ function superSpeedUp() {
     //worldConfig.catRotationSpeed = worldConfig.catRotationSpeed + 0.05;
 }
 
+window.flyUp = flyUp;
 function flyUp() {
     worldConfig.myCat.setPosition(
         worldConfig.myCat.getPosition().x,
@@ -134,6 +146,7 @@ function flyUp() {
     );
 }
 
+window.flyDown = flyDown;
 function flyDown() {
     worldConfig.myCat.setPosition(
         worldConfig.myCat.getPosition().x,
@@ -142,6 +155,7 @@ function flyDown() {
     );
 }
 
+window.chungusMode = chungusMode;
 function chungusMode() {
     if (chungusModeToggle) {
         setCatModelScale(worldConfig.myCat.catModel.children[0], 1, 1, 1);
@@ -164,16 +178,19 @@ function chungusMode() {
     chungusModeToggle = !chungusModeToggle;
 }
 
+window.setCatModelScale = setCatModelScale;
 function setCatModelScale(catModelChild, x, y, z) {
     catModelChild.scale.x = x;
     catModelChild.scale.y = y;
     catModelChild.scale.z = z;
 }
 
+window.newSpawnsRat = newSpawnsRat;
 function newSpawnsRat() {
     worldConfig.catObject = worldConfig.ratObject;
 }
 
+window.getDistance = getDistance;
 function getDistance(posA, posB) {
     return Math.sqrt(
         (posB.x - posA.x) ** 2 +
@@ -193,21 +210,26 @@ function connectAnother() {
     websocket.addEventListener("message", websocketEventListener2);
 }
 
+window.newCat = loadRat;
 function loadRat(loader, position) {
+    const oiiaElement = document.getElementById('oiia');
+    const oiiaPath = oiiaElement.dataset.path;
     loader.load(
         // "dingus the cat" (https://skfb.ly/oAtMJ) by bean(alwayshasbean) is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
-        "assets/models/rat.json",
-        function (object) {
-            worldConfig.myCat.object.add(object)
-            object.position.x = position.x;
-            object.position.y = position.y;
-            object.position.z = position.z;
+        // "Oiiaioooooiai Cat" (https://skfb.ly/prRXD) by Zhuier is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+        oiiaPath,
+        function (gltf) {
+            const model = gltf.scene;
+            worldConfig.myCat.object.add(model)
+            model.position.x = position.x;
+            model.position.y = position.y;
+            model.position.z = position.z;
         }
     );
 }
 
+window.newCat = newCat;
 function newCat() {
-
     const loader = new THREE.ObjectLoader();
     loader.load(
         "assets/models/arrow.json",
@@ -236,10 +258,11 @@ function newCat() {
     //    }
     //)
 
-    loadRat(loader, { x: 1, y: 1, z: 0 });
-    loadRat(loader, { x: 1, y: 1, z: 1 });
-    loadRat(loader, { x: 0, y: 1, z: 1 });
-    loadRat(loader, { x: 0, y: 1, z: 0 });
+    const loader2 = new GLTFLoader();
+    loadRat(loader2, { x: 1, y: 1, z: -1 });
+    loadRat(loader2, { x: 1, y: 1, z: 1 });
+    loadRat(loader2, { x: -1, y: 1, z: 1 });
+    loadRat(loader2, { x: -1, y: 1, z: -1 });
 
     //worldConfig.myCat = new Cat(
     //    "",
