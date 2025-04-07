@@ -202,6 +202,10 @@ function getDistance(posA, posB) {
     );
 }
 
+function setFog()
+{
+    myCat.object.parent.fog = new THREE.Fog(0x000000, 3, 10);
+}
 
 // Events
 
@@ -243,29 +247,15 @@ function newCat() {
     loader.load(
         "assets/models/arrow.json",
         function (object) {
-            myCat.object.parent.add(object);
             object.visible = true;
-            //object.visible = false
             object.children[0].material.color = { r: 0.8, g: 0.2, b: 0.8 };
             worldConfig.myCat.object.add(object);
             setInterval(() => {
-                if (worldConfig.rat.object.position.y >= 0 && worldConfig.rat.object.visible && worldConfig.rat.labelSprite.text.startsWith("Rat (")) {
                     object.visible = true;
-                    //object.lookAt(worldConfig.myCat.object.position)
                     object.rotateY(1);
-                }
             }, 1000 / 30)
         }
-    ) 
-
-    // Imprison the rat in a magic cylinder
-    //loader.load(
-    //    "assets/models/ratprison.json",
-    //    function (object) {
-    //        worldConfig.myCat.object.add(object)
-    //        object.position.z = 2;
-    //    }
-    //)
+    );
 
     const loader2 = new GLTFLoader();
     loadRat(loader2, { x: 1, y: 1, z: -1 });
@@ -275,6 +265,14 @@ function newCat() {
 
     animate();
 
+    // Imprison the rat in a magic cylinder
+    //loader.load(
+    //    "assets/models/ratprison.json",
+    //    function (object) {
+    //        worldConfig.myCat.object.add(object)
+    //        object.position.z = 2;
+    //    }
+    //)
 
     //worldConfig.myCat = new Cat(
     //    "",
