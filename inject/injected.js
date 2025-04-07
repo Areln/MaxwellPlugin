@@ -13,6 +13,9 @@ var translateInterval;
 var roboCatInterval;
 var ratPos = { x: 0, y: 0, z: 0 };
 
+var mixers = [];
+var clock = new THREE.Clock();
+
 // Remove top background for increased visibility
 var topbar = document.getElementById("topbar");
 topbar.style = "background: rgb(0 0 0 / 0%);"
@@ -210,7 +213,6 @@ function connectAnother() {
     websocket.addEventListener("message", websocketEventListener2);
 }
 
-window.newCat = loadRat;
 function loadRat(loader, position) {
     const oiiaElement = document.getElementById('oiia');
     const oiiaPath = oiiaElement.dataset.path;
@@ -224,8 +226,15 @@ function loadRat(loader, position) {
             model.position.x = position.x;
             model.position.y = position.y;
             model.position.z = position.z;
+
+            // Animation
+            var mixer = new THREE.AnimationMixer(gltf.scene)
+            var action = mixer.clipAction(gltf.animations[0]);
+            action.play();
+            mixers.push(mixer);
         }
     );
+
 }
 
 window.newCat = newCat;
@@ -263,6 +272,9 @@ function newCat() {
     loadRat(loader2, { x: 1, y: 1, z: 1 });
     loadRat(loader2, { x: -1, y: 1, z: 1 });
     loadRat(loader2, { x: -1, y: 1, z: -1 });
+
+    animate();
+
 
     //worldConfig.myCat = new Cat(
     //    "",
@@ -443,3 +455,14 @@ const websocketEventListener2 = (event) => {
         //worldConfig.rat.setName("Rat (30s)");
     }
 };
+
+// Animation loop
+function animate() {
+    requestAnimationFrame(animate);
+
+    const deltaTime = clock.getDelta(); // Get delta time only once per frame
+    // Update all animation mixers
+    mixers.forEach(mixer => {
+        mixer.update(deltaTime);
+    });
+}
