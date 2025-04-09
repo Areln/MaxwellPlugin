@@ -31,6 +31,10 @@
     {
       "resources": [ "oiia.glb" ],
       "matches": [ "https://maxwellcat.world/*" ]
+    },
+    {
+      "resources": [ "icon128.png" ],
+      "matches": [ "https://maxwellcat.world/*" ]
     }
   ]
 }

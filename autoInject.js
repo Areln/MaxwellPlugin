@@ -24,5 +24,13 @@ async function injectUI() {
         oiiaElement.dataset.path = chrome.runtime.getURL('oiia.glb');
         oiiaElement.style.display = 'none';
         document.body.appendChild(oiiaElement);
+
+        // Add path here because we cannot get it in the injected script
+        const bgElement = document.createElement('div');
+        bgElement.id = 'custombg';
+        //bgElement.dataset.path = chrome.runtime.getURL('bg.jpg');
+        bgElement.dataset.path = chrome.runtime.getURL('icon128.png');
+        bgElement.style.display = 'none';
+        document.body.appendChild(bgElement);
     }
 }

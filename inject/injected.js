@@ -20,6 +20,8 @@ var clock = new THREE.Clock();
 var topbar = document.getElementById("topbar");
 topbar.style = "background: rgb(0 0 0 / 0%);"
 
+setBackground();
+
 document.addEventListener("keydown", function (event) {
     if (event.code === "Space") {
         flyUp();
@@ -44,8 +46,7 @@ function enableRoboCat() {
 
         if (ratPos.x !== newPos.x && ratPos.z !== newPos.z) {
             //console.log('new position detected: (' + ratPos.x + ',' + ratPos.y + ',' + ratPos.z + ') // (' + newPos.x + ',' + newPos.y + ',' + newPos.z + ')');
-            if (translateInterval != undefined)
-            {
+            if (translateInterval != undefined) {
                 clearInterval(translateInterval);
             }
             ratPos = newPos;
@@ -101,14 +102,14 @@ function moveTowardsCoin() {
             clearInterval(translateInterval);
             idleRotate();
         }
-    }, 1000/100);
+    }, 1000 / 100);
 }
 
 window.idleRotate = idleRotate;
 function idleRotate() {
     idleRotateInterval = setInterval(function () {
         worldConfig.myCat.rotateY(worldConfig.catRotationSpeed);
-    }, 1000/100);
+    }, 1000 / 100);
 }
 
 window.becomeRat = becomeRat;
@@ -120,6 +121,8 @@ window.toggleCatVis = toggleCatVis;
 function toggleCatVis() {
     showHideToggle = !showHideToggle;
     worldConfig.otherCats.forEach((x) => (x.catModel.visible = showHideToggle));
+
+    setFog();
 }
 
 window.superSpeedDown = superSpeedDown;
@@ -202,9 +205,22 @@ function getDistance(posA, posB) {
     );
 }
 
-function setFog()
-{
+function setFog() {
     myCat.object.parent.fog = new THREE.Fog(0x000000, 3, 10);
+}
+
+function setBackground() {
+    const customBGElement = document.getElementById('custombg');
+    const bgPath = customBGElement.dataset.path;
+
+    const textureLoader = new THREE.TextureLoader();
+    const texture = textureLoader.load(
+        bgPath,
+        () => {
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+            texture.colorSpace = THREE.SRGBColorSpace;
+            myCat.object.parent.background = texture;
+        });
 }
 
 // Events
@@ -251,8 +267,8 @@ function newCat() {
             object.children[0].material.color = { r: 0.8, g: 0.2, b: 0.8 };
             worldConfig.myCat.object.add(object);
             setInterval(() => {
-                    object.visible = true;
-                    object.rotateY(1);
+                object.visible = true;
+                object.rotateY(1);
             }, 1000 / 30)
         }
     );
