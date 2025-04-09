@@ -213,14 +213,27 @@ function setBackground() {
     const customBGElement = document.getElementById('custombg');
     const bgPath = customBGElement.dataset.path;
 
-    const textureLoader = new THREE.TextureLoader();
-    const texture = textureLoader.load(
+    //Wallpaper background
+    //const textureLoader = new THREE.TextureLoader();
+    //const texture = textureLoader.load(
+    //    bgPath,
+    //    () => {
+    //        texture.mapping = THREE.EquirectangularReflectionMapping;
+    //        texture.colorSpace = THREE.SRGBColorSpace;
+    //        myCat.object.parent.background = texture;
+    //    });
+
+    //Skybox
+    const loader = new THREE.CubeTextureLoader();
+    const texture = loader.load([
         bgPath,
-        () => {
-            texture.mapping = THREE.EquirectangularReflectionMapping;
-            texture.colorSpace = THREE.SRGBColorSpace;
-            myCat.object.parent.background = texture;
-        });
+        bgPath,
+        bgPath,
+        bgPath,
+        bgPath,
+        bgPath,
+    ]);
+    myCat.object.parent.background = texture;
 }
 
 // Events
@@ -426,7 +439,7 @@ class Cat {
 }
 
 const websocketEventListener2 = (event) => {
-    //console.log(event);
+    console.log(event);
 
     // Wait until we have our own cat before creating anyone else's
     if (worldConfig.myCat === undefined) {
